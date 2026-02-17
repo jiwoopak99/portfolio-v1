@@ -1,4 +1,24 @@
+import { useState } from 'react'
+
 function App() {
+  const [form, setForm] = useState({ name: '', email: '', message: '' })
+  const [status, setStatus] = useState('idle') // idle | sending | sent
+
+  const onChange = (e) => {
+    const { name, value } = e.target
+    setForm((prev) => ({ ...prev, [name]: value }))
+  }
+
+  const onSubmit = async (e) => {
+    e.preventDefault()
+    if (status === 'sending') return
+
+    setStatus('sending')
+    // TODO: эндээс backend / email service рүү илгээдэг болгож холбож болно.
+    await new Promise((r) => setTimeout(r, 600))
+    setStatus('sent')
+  }
+
   const projects = [
     { id: 1, title: 'Төсөл 1', desc: 'Энд таны төслийн тайлбар байрлана.', tech: ['React', 'Tailwind'] },
     { id: 2, title: 'Төсөл 2', desc: 'Энд таны төслийн тайлбар байрлана.', tech: ['Node.js', 'MongoDB'] },
@@ -78,8 +98,8 @@ function App() {
             Холбоо барих
           </h2>
           <p className="text-zinc-500 mb-8">Холбогдохыг хүсвэл доорх хэлбэр ашиглана уу.</p>
-          <div className="rounded-xl border border-zinc-800 bg-zinc-900/50 p-8 sm:p-10 max-w-xl">
-            <form className="space-y-6">
+          <div className="rounded-xl border border-zinc-800 bg-zinc-900/50 p-8 sm:p-10 max-w-xl backdrop-blur">
+            <form className="space-y-6" onSubmit={onSubmit}>
               <div>
                 <label htmlFor="name" className="block text-sm font-medium text-zinc-300 mb-2">
                   Нэр
@@ -88,6 +108,10 @@ function App() {
                   type="text"
                   id="name"
                   name="name"
+                  value={form.name}
+                  onChange={onChange}
+                  required
+                  autoComplete="name"
                   className="w-full rounded-lg border border-zinc-700 bg-zinc-800/50 px-4 py-3 text-zinc-100 placeholder-zinc-500 focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500 transition-colors"
                   placeholder="Таны нэр"
                 />
@@ -100,6 +124,10 @@ function App() {
                   type="email"
                   id="email"
                   name="email"
+                  value={form.email}
+                  onChange={onChange}
+                  required
+                  autoComplete="email"
                   className="w-full rounded-lg border border-zinc-700 bg-zinc-800/50 px-4 py-3 text-zinc-100 placeholder-zinc-500 focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500 transition-colors"
                   placeholder="example@email.com"
                 />
@@ -112,16 +140,25 @@ function App() {
                   id="message"
                   name="message"
                   rows="4"
+                  value={form.message}
+                  onChange={onChange}
+                  required
                   className="w-full rounded-lg border border-zinc-700 bg-zinc-800/50 px-4 py-3 text-zinc-100 placeholder-zinc-500 focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500 transition-colors resize-none"
                   placeholder="Таны мессеж энд..."
                 />
               </div>
-              <button
-                type="submit"
-                className="w-full sm:w-auto px-8 py-3 rounded-lg bg-gradient-to-r from-emerald-500 to-cyan-500 text-zinc-950 font-semibold hover:from-emerald-400 hover:to-cyan-400 transition-all duration-200 shadow-lg shadow-emerald-500/20"
-              >
-                Илгээх
-              </button>
+              <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-4">
+                <button
+                  type="submit"
+                  disabled={status === 'sending'}
+                  className="w-full sm:w-auto px-8 py-3 rounded-lg bg-gradient-to-r from-emerald-500 to-cyan-500 text-zinc-950 font-semibold hover:from-emerald-400 hover:to-cyan-400 transition-all duration-200 shadow-lg shadow-emerald-500/20 disabled:opacity-60 disabled:cursor-not-allowed"
+                >
+                  {status === 'sending' ? 'Илгээж байна...' : status === 'sent' ? 'Илгээлээ' : 'Илгээх'}
+                </button>
+                <p className="text-sm text-zinc-500" aria-live="polite">
+                  {status === 'sent' ? 'Баярлалаа! Удахгүй хариу өгнө.' : ' '}
+                </p>
+              </div>
             </form>
           </div>
         </section>
