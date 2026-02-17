@@ -16,6 +16,13 @@ function App() {
           <p className="text-emerald-400/90 text-sm font-medium tracking-wider uppercase mb-4 animate-fade-in">
             Сайн байна уу
           </p>
+          <div className="flex justify-center mb-6 animate-fade-in">
+            <img
+              src="/me.jpg"
+              alt="pak jiwoo"
+              className="w-40 h-40 rounded-full border-4 border-[#34d399] object-cover"
+            />
+          </div>
           <h1 className="text-4xl sm:text-5xl lg:text-6xl font-semibold leading-tight mb-6 animate-fade-in" style={{ animationDelay: '0.1s' }}>
             Намайг{' '}
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-400">
